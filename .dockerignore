@@ -1,0 +1,6 @@
+**/.git
+**/.gitignore
+Dockerfile
+.dockerignore
+cmake-build-debug
+cmake-build-release

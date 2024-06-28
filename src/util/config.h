@@ -1,0 +1,17 @@
+#pragma once
+
+#ifndef BITRUSS_CONFIG_H
+#define BITRUSS_CONFIG_H
+
+#define MAX_IDS 99999999
+#define THREADS 16
+#define TOTAL_MEMORY 25425608704
+#define BLK_NUMS 86
+#define BLK_DIM 1024
+
+//#define COUNT_BUTTERFLY
+#define LOG_USE_COLOR
+
+
+
+#endif //BITRUSS_CONFIG_H

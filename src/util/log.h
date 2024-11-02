@@ -1,4 +1,8 @@
 /**
+ * @file log.h
+ *
+ * @brief logger file
+ *
  * @author rxi
  * Source: https://github.com/rxi/log.c
  * @date on 2023/10/30.

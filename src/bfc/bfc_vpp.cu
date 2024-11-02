@@ -1,11 +1,34 @@
+/**
+ * @file bfc_vpp.cu
+ * @brief Butterfly counting with vertex priority on GPU.
+ *
+ * This file contains the GPU-accelerated butterfly counting algorithm with vertex priority,
+ * designed to execute on GPU platform, supporting different bitruss algorithms.
+ * It utilizes CUDA to perform efficient butterfly counting, including both overall count and
+ * edge-specific butterfly counts.
+ *
+ * The file also manages memory allocation and data transfer between the host and device,
+ * based on graph data inputs, and synchronizes results after kernel execution.
+ */
+
 #include "bfc.cuh"
 #include <cuda_runtime.h>
 
 /**
- * butterfly counting with vertex priority
- * @param n number of vertices
- * @param blk_num block number
- * @param cnt the number of butterfly counting
+ * @brief Kernel function for butterfly counting with vertex priority.
+ *
+ * This kernel iterates over each vertex and its neighbors to identify butterfly structures
+ * and counts them based on the vertex priority. The count of butterflies is accumulated in a shared
+ * counter across threads within a block.
+ *
+ * @param n The number of vertices.
+ * @param d_offset The offset array for accessing neighbors.
+ * @param d_neighbors Array containing neighbors of each vertex.
+ * @param d_bitmaps Bitmap array used to mark vertices involved in butterfly structures.
+ * @param last_uses Array for tracking last-used vertices in the bitmap, for efficient reset.
+ * @param d_degree Degree array storing the degree of each vertex.
+ * @param blk_num The number of blocks in the grid.
+ * @param cnt Output variable to store the total count of butterflies.
  */
 __global__ auto bfc_kernel(uint n, const uint* d_offset, const uint* d_neighbors, uint* d_bitmaps, int* last_uses,
                            const uint* d_degree, uint const blk_num, ull* cnt) -> void {
@@ -83,10 +106,22 @@ __global__ auto bfc_kernel(uint n, const uint* d_offset, const uint* d_neighbors
     }
 }
 
+
 /**
- * counting butterflies for each edge with vertex priority
- * @param n number of vertices
- * @param blk_num block number
+ * @brief Kernel for edge-based butterfly counting with vertex priority.
+ *
+ * This kernel computes the butterfly count for each edge by calculating its support.
+ * Edge support is the count of butterflies that contain a given edge.
+ *
+ * @param n Number of vertices.
+ * @param d_offset Array containing offsets to access neighbors.
+ * @param d_neighbors Array storing neighbors of each vertex.
+ * @param d_edge_ids Array mapping each edge to its unique ID.
+ * @param d_edge_support Output array that stores butterfly counts for each edge.
+ * @param d_bitmaps Bitmap array for marking vertices involved in butterfly structures.
+ * @param last_uses Array for tracking vertices involved in the butterfly structure for reset.
+ * @param d_degree Array storing degree of each vertex.
+ * @param blk_num Number of blocks in the grid.
  */
 __global__ auto ebfc_kernel(uint n, const uint* d_offset, const uint* d_neighbors,
                             const uint* d_edge_ids, uint* d_edge_support,
@@ -185,10 +220,15 @@ __global__ auto ebfc_kernel(uint n, const uint* d_offset, const uint* d_neighbor
     }
 }
 
+
 /**
- * butterfly counting with vertex priority
- * we used
- * @param g graph object
+ * @brief Function to initialize and launch the butterfly counting kernel.
+ *
+ * This function allocates memory, copies data from host to device, and
+ * launches the `ebfc_kernel` for butterfly counting based on vertex priority.
+ * It also retrieves the maximum edge support value.
+ *
+ * @param g Pointer to the graph object.
  */
 auto bfc_evpp(Graph* g) -> void {
 
@@ -270,9 +310,13 @@ auto bfc_evpp(Graph* g) -> void {
 
 
 /**
- * butterfly counting (cnt_only) with vertex priority
- * we used
- * @param g graph object
+ * @brief Function to initialize and launch the butterfly counting kernel with count-only mode.
+ *
+ * This function sets up and launches the `bfc_kernel` for butterfly counting with vertex priority,
+ * where only the total butterfly count is obtained. Memory is allocated and data is copied to the device,
+ * then the result is copied back to the host after execution.
+ *
+ * @param g Pointer to the graph object.
  */
 auto bfc_vpp(Graph* g) -> void {
 

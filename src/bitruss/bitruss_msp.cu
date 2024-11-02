@@ -1,3 +1,9 @@
+/**
+ * @file bitruss_msp.cu
+ * @brief Header file for Bitruss algorithms with peeling approach.
+ *
+ */
+
 #include "bitruss.cuh"
 
 /**
@@ -420,13 +426,17 @@ __global__ auto nprocess_edge(uint m, uint* d_edges, uint const* d_degree, const
 }
 
 /**
-* muitlple stage bitruss decomposition online peeling
-* While
-*      1. scan the edges with support <= k
-*      2. process edges and update support
-*      3. update k ++
-* @param g
-*/
+ * @brief Performs multiple-stage bitruss decomposition using online peeling.
+ *
+ * This function iteratively scans edges with support less than or equal
+ * to a threshold (k), processes those edges to update their support
+ * values, and increments the threshold. The function utilizes CUDA for
+ * GPU acceleration and manages memory allocation and data transfer
+ * between the host and device.
+ *
+ * @param g Pointer to the graph structure that contains the graph data,
+ *          including edges, support values, and other relevant attributes.
+ */
 auto bitruss_msp(Graph *g) -> void {
 
     //    ebfc(g, 48);
@@ -574,13 +584,19 @@ auto bitruss_msp(Graph *g) -> void {
 
 
 /**
-* muitlple stage bitruss decomposition online peeling
-* While
-*      1. scan the edges with support <= k
-*      2. process edges and update support
-*      3. update k ++
-* @param g
-*/
+ * @brief Performs multiple-stage bitruss decomposition using online peeling.
+ *
+ * This function iteratively scans edges with support less than or equal
+ * to a threshold (k), processes those edges to update their support
+ * values, and increments the threshold. The function utilizes CUDA for
+ * GPU acceleration and manages memory allocation and data transfer
+ * between the host and device.
+ *
+ * Without graph compression.
+ *
+ * @param g Pointer to the graph structure that contains the graph data,
+ *          including edges, support values, and other relevant attributes.
+ */
 auto bitruss_mspp(Graph *g) -> void {
 
     bfc_evpp(g);

@@ -1,3 +1,9 @@
+/**
+ * @file bitruss_hidx.cu
+ * @brief Header file for Bitruss algorithms with h-index.
+ *
+ */
+
 #include "bitruss.cuh"
 
 
@@ -163,9 +169,11 @@ __global__ void bitruss_decomposition_h_index(uint num_edge, const uint *d_edges
 
 
 /**
- * bitruss decomposition based on h-index
+ * @brief bitruss decomposition based on h-index
+ *
  * for edge support, we only need to kown the current round and privous round value
  * two array to store the current edge support and privous edge support
+ *
  * @param g graph object
  */
 auto g_bitruss_hindex(Graph *g) -> void {

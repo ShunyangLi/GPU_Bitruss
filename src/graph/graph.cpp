@@ -1,6 +1,15 @@
 #include "graph.h"
 
-// check graph for consist edge id
+/**
+ * @brief Checks the consistency of edges in the graph.
+ *
+ * This method verifies that each edge in the graph has a corresponding
+ * edge ID and that the edge's endpoints are correctly represented.
+ * It checks for each edge (u, v) whether the edge ID associated with
+ * u's neighbors matches the edge ID associated with v's neighbors.
+ * If any inconsistency is found, an error is logged and the program
+ * exits. This function is run in parallel to improve performance.
+ */
 auto Graph::check_graph() const -> void {
     log_warn("start checking graph, this may take a while");
 
@@ -42,13 +51,26 @@ auto Graph::check_graph() const -> void {
     log_success("graph check pass !");
 }
 
-/**
- * load http://konect.cc/ graph data to binary file
- * @param graph_file graph file from konect
- * @param bin_file store the binary file
- * @param bin_file store the binary file
- */
 
+/**
+ * @brief Loads graph data from a specified file and processes it into a binary format.
+ *
+ * This function reads the graph data from a file (typically from the Konect dataset)
+ * and constructs the internal representation of the bipartite graph. It processes
+ * the upper and lower vertex IDs, builds adjacency lists, and initializes arrays
+ * that hold edge information, degrees, and supports.
+ *
+ * @param path The path to the graph file to be loaded. The file should contain
+ *             pairs of vertex IDs representing edges in the graph.
+ *
+ * The function also performs the following tasks:
+ * - Initializes arrays for degrees, offsets, neighbors, and edges.
+ * - Merges the upper and lower vertex lists, ensuring that all edges are
+ *   represented correctly.
+ * - Sorts the neighbors of each vertex for efficient access.
+ * - Assigns unique edge IDs for each edge in the graph.
+ * - Checks the graph's consistency if the CHECK_GRAPH macro is defined.
+ */
 auto Graph::process_graph(const std::string& path) -> void {
     log_info("processing graph file: %s", path.c_str());
 
@@ -219,6 +241,23 @@ auto Graph::process_graph(const std::string& path) -> void {
 #endif
 }
 
+/**
+ * @brief Constructs a Graph object by loading data from a specified file.
+ *
+ * This constructor initializes the Graph object and either processes a graph
+ * from a specified file (if the file is not already in binary format) or
+ * loads an existing binary graph file. It sets up the necessary internal
+ * variables to represent the graph structure.
+ *
+ * @param filename The name of the file to load the graph data from. This can be
+ *                 either a text file containing edge lists or a binary file.
+ * @param is_to_bin A boolean flag indicating whether to process the graph
+ *                  from a text file to binary format (true) or to load from
+ *                  an existing binary file (false).
+ *
+ * @throws std::runtime_error if the provided filename is not in binary format
+ *                             and is not suitable for processing.
+ */
 Graph::Graph(const std::string& filename, bool is_to_bin) {
     u_num = 0;
     l_num = 0;
@@ -237,9 +276,19 @@ Graph::Graph(const std::string& filename, bool is_to_bin) {
     }
 }
 
+
 /**
- * convert graph to binary file
- * @param filename
+ * @brief Converts the graph data to a binary file format.
+ *
+ * This function serializes the internal representation of the graph, including
+ * the number of upper and lower vertices, maximum vertex ID, number of edges,
+ * and other relevant data structures into a binary file. This can be used for
+ * efficient storage and retrieval of graph data.
+ *
+ * @param filename The name of the binary file to which the graph data will be
+ *                 written. This file will be created if it does not exist.
+ *
+ * @throws std::runtime_error if the file cannot be opened for writing.
  */
 auto Graph::graph_to_bin(const std::string& filename) -> void {
     log_info("convert graph to binary file: %s", filename.c_str());
@@ -268,10 +317,21 @@ auto Graph::graph_to_bin(const std::string& filename) -> void {
     out.close();
 }
 
+
 /**
- * load graph from binary file
- * @param filename
+ * @brief Loads the graph data from a binary file.
+ *
+ * This function reads the serialized graph data from a specified binary file and
+ * reconstructs the internal representation of the graph, including the number of
+ * upper and lower vertices, maximum vertex ID, number of edges, and other
+ * associated data structures.
+ *
+ * @param filename The name of the binary file from which the graph data will be
+ *                 loaded. The file must exist and be in the correct binary format.
+ *
+ * @throws std::runtime_error if the file cannot be opened or read.
  */
+
 auto Graph::load_graph_bin(const std::string& filename) -> void {
     log_info("loading graph from binary file: %s", filename.c_str());
 

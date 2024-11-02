@@ -35,6 +35,20 @@ typedef unsigned int vid_t;
 typedef int num_t;
 typedef unsigned long long int ull;
 
+
+/**
+ * @brief Handles CUDA errors by checking the error code and logging the
+ *        error message along with the file name and line number.
+ *
+ * This function checks if a CUDA error occurred. If an error is detected,
+ * it prints the corresponding error message to the standard output,
+ * indicating the location in the source file where the error occurred.
+ * The program is then terminated with a failure exit code.
+ *
+ * @param err The CUDA error code to check.
+ * @param file The name of the source file where the error occurred.
+ * @param line The line number in the source file where the error occurred.
+ */
 static void HandleError(cudaError_t err, const char *file, int line) {
     if (err != cudaSuccess) {
         printf("%s in %s at line %d\n",
@@ -47,6 +61,17 @@ static void HandleError(cudaError_t err, const char *file, int line) {
 #define CER(err) \
     (HandleError(err, __FILE__, __LINE__))
 
+
+/**
+ * @brief Adds command line arguments to the argument parser.
+ *
+ * This function configures the argument parser by defining the various
+ * command line options that the program can accept. Each argument
+ * has an associated help message that describes its purpose.
+ *
+ * @param parser The argument parser instance to which the arguments
+ *               will be added.
+ */
 static auto add_args(argparse::ArgumentParser &parser) -> void {
     parser.add_argument("--device")
             .help("GPU Device ID (must be a positive integer)")
@@ -89,6 +114,16 @@ static auto add_args(argparse::ArgumentParser &parser) -> void {
 }
 
 
+/**
+ * @brief Retrieves and displays information about a specified CUDA device.
+ *
+ * This function queries the properties of a CUDA device using the device ID
+ * provided. It then formats and prints relevant information, such as the
+ * device name, memory specifications, compute capability, and the number
+ * of streaming multiprocessors (SMs).
+ *
+ * @param device_id The ID of the CUDA device to query.
+ */
 static auto get_device_info(int const device_id) -> void {
     cudaDeviceProp prop{};
     CER(cudaGetDeviceProperties(&prop, device_id));

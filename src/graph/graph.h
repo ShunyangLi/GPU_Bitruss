@@ -1,9 +1,32 @@
+/**
+ * @file graph.h
+ * @brief Graph data structure and related operations.
+ *
+ * This header file defines the Graph class, which encapsulates the
+ * representation of a bipartite graph, including methods for loading
+ * graphs from files (both binary and text formats) and converting
+ * graphs to binary format. The Graph class maintains various attributes
+ * related to the graph, such as the number of vertices and edges,
+ * degrees of vertices, and edge support values.
+ */
+
 #pragma once
 #ifndef BITRUSS_GRAPH_H
 #define BITRUSS_GRAPH_H
 
 #include "util/utility.h"
 
+
+/**
+ * @class Graph
+ * @brief Represents a graph data structure for bitruss decomposition.
+ *
+ * @details This class provides methods for loading, processing, and managing graph data.
+ * It supports loading from binary files and includes functionality for handling graph edges,
+ * vertex degrees, and truss values.
+ *
+ * @note This class is intended for use in GPU-accelerated bitruss decomposition applications.
+ */
 class Graph {
 public:
     explicit Graph(const std::string& filename, bool is_bin);

@@ -1,11 +1,25 @@
+/**
+ * @file cpu_bfc.cpp
+ * @brief Butterfly counting with vertex priority on CPU.
+ *
+ * This file contains the GPU-accelerated butterfly counting algorithm with vertex priority,
+ * designed to execute on CPU platform.
+ */
+
+
 #include <cstring>
 #include <omp.h>
 #include "bfc.cuh"
 
+
 /**
- * edge butterfly counting for each edge, we used
- * @param g graph
- * @param threads number of threads
+ * @brief Performs edge butterfly counting for each edge in the graph.
+ *
+ * This function calculates the butterfly count for each edge in a given graph using OpenMP
+ * for parallel processing. It updates the edge support based on the butterfly counts.
+ *
+ * @param g Pointer to the graph structure that contains the adjacency information and edge data.
+ * @param threads The number of threads to use for parallel execution.
  */
 auto ebfc(Graph* g, int threads) -> void {
     log_info("running butterfly counting for each edge with %d threads", threads);
@@ -109,9 +123,16 @@ auto ebfc(Graph* g, int threads) -> void {
 
 
 /**
- * edge butterfly counting for each edge, we used
- * @param g graph
- * @param threads number of threads
+ * @brief Counts butterflies in the graph (count only).
+ *
+ * This function performs butterfly counting in a given graph using
+ * parallel processing with OpenMP. It calculates the total number of
+ * butterflies present in the graph, focusing on counting without
+ * updating edge support values.
+ *
+ * @param g Pointer to the graph structure containing adjacency information
+ *          and degree data.
+ * @param threads Number of threads to be used for parallel execution.
  */
 auto bfc(Graph* g, int threads) -> void {
     log_info("running butterfly counting (cnt only) with %d threads", threads);

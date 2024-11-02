@@ -1,3 +1,13 @@
+/**
+ * @file bfc.cuh
+ * @brief Header file for Butterfly Counting algorithms.
+ *
+ * This file contains declarations for GPU and CPU implementations
+ * of the Butterfly Counting algorithm for counting the number of
+ * butterfly structures in a graph.
+ *
+ */
+
 #ifndef BITRUSS_BFC_CUH
 #define BITRUSS_BFC_CUH
 

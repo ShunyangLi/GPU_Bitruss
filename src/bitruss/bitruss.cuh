@@ -1,3 +1,11 @@
+/**
+ * @file bitruss.cuh
+ * @brief Header file for Bitruss algorithms.
+ *
+ * This file contains declarations for both GPU and CPU implementations
+ * of the Bitruss algorithm, which is used for cohesive subgraph
+ * computation in graphs.
+ */
 #pragma once
 
 #ifndef BITRUSS_BITRUSS_CUH
